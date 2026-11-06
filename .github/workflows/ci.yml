@@ -32,3 +32,19 @@ jobs:
 
       - name: Unit tests with coverage
         run: python scripts/run_coverage.py
+
+  trigger-ai-pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Trigger the AI Pipeline
+        env:
+          GH_TOKEN: ${{ secrets.AI_PIPELINE_TOKEN }}
+          AI_REPO: ${{ github.repository_owner }}/club-management-ai
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          ref=main
+          if gh api "repos/$AI_REPO/branches/$BRANCH" > /dev/null 2>&1; then
+            ref=$BRANCH
+          fi
+          gh workflow run ci.yml -R "$AI_REPO" --ref "$ref" -f project_branch="$BRANCH"
