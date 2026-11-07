@@ -5,6 +5,9 @@ __pycache__/
 .mypy_cache/
 .pytest_cache/
 .ruff_cache/
+
+# Environment files: only .env.example is versioned
 .env
 .env.*
 !.env.example
+.secrets.env
